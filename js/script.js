@@ -31,7 +31,7 @@ for (let i = 0; i < starCount; i++) {
 }
 
 // Crear palabras en columnas
-const columns = Math.floor(canvas.width / (ctx.measureText(phrase).width + 20));
+const columns = Math.floor(canvas.width / (ctx.measureText(phrase).width + 1));
 const words = [];
 
 for (let i = 0; i < columns; i++) {
