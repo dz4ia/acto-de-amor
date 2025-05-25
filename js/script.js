@@ -14,7 +14,7 @@ canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
 const phrase = "TE AMO";
-const fontSize = 40;
+const fontSize = 60;
 ctx.font = fontSize + "px monospace";
 
 // Generar estrellas
