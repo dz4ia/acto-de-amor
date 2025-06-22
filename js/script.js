@@ -1,65 +1,69 @@
-window.onload = function () {
 
+const canvas = document.getElementById('matrixCanvas');
+const ctx = canvas.getContext('2d');
 
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
 
-  const canvas = document.getElementById('matrix');
-  const ctx = canvas.getContext('2d');
+const phrase = "TE AMO";
+const fontSize = 60;
+ctx.font = fontSize + "px monospace";
 
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-    const estrellas = Array.from({ length: 150 }, () => ({
-  x: Math.random() * canvas.width,
-  y: Math.random() * canvas.height,
-  radio: Math.random() * 1.5,
-  alpha: Math.random()
-}));
+// Generar estrellas
+const starCount = 200;
+const stars = [];
 
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
+for (let i = 0; i < starCount; i++) {
+  stars.push({
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+    radius: Math.random() * 1.5,
+    alpha: Math.random()
+  });
+}
 
-  const palabras = ['TE AMO❤️', 'TE ADORO💕', 'HERMOSA💗', 'MARAVILLOSA💞', 
-    'ENCANTADORA💖', 'PERFECTA💌', 'TIERNA💖', 'PRECIOSA💝', 'MI BIBI💞', 'MI NINI💞', 'MI COTITA💝', 'MAGNIFICA💘', 
-    'BELLA💞', 'UNICA💓', 'BONITA💘', 'LINDA❤️', '💌', '💘', '💝', '💗', '💓',
-      '💞', '💕', '❣️', '❤️'];
-  const fontSize = 20;
-  const columnas = Math.floor(canvas.width / (fontSize * 5)); // menos columnas, más espacio
+// Crear palabras en columnas
+const columns = Math.floor(canvas.width / (ctx.measureText(phrase).width + 1));
+const words = [];
 
-  const caidas = Array.from({ length: columnas }, (_, i) => ({
-    palabra: palabras[Math.floor(Math.random() * palabras.length)],
-    x: i * fontSize * 6,
+for (let i = 0; i < columns; i++) {
+  words.push({
+    text: phrase,
+    x: i * (ctx.measureText(phrase).width + 100),
     y: Math.random() * -canvas.height,
-    velocidad: 1 + Math.random() * 1
-  }));
+    speed: 2 + Math.random() * 3
+  });
+}
 
-  function dibujar() {
-    // Fondo totalmente opaco para eliminar el "rastro"
-    ctx.fillStyle = 'rgba(79, 8, 8, 0.2)';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    // Dibujar estrellas
-estrellas.forEach((e) => {
-  ctx.beginPath();
-  ctx.arc(e.x, e.y, e.radio, 0, 2 * Math.PI);
-  ctx.fillStyle = `rgba(255, 255, 255, ${e.alpha})`;
-  ctx.fill();
-});
-
-    ctx.font = fontSize + 'px monospace';
-    ctx.textAlign = 'center';
-
-    caidas.forEach((c) => {
-      ctx.fillStyle = '#f00000';
-      ctx.fillText(c.palabra, c.x + fontSize * 2, c.y);
-
-      c.y += c.velocidad;
-
-      if (c.y > canvas.height) {
-        c.palabra = palabras[Math.floor(Math.random() * palabras.length)];
-        c.y = -fontSize;
-      }
-    });
+function drawStars() {
+  for (let s of stars) {
+    ctx.beginPath();
+    ctx.arc(s.x, s.y, s.radius, 0, 2 * Math.PI);
+    ctx.fillStyle = `rgba(255, 255, 255, ${s.alpha})`;
+    ctx.fill();
   }
+}
 
-  setInterval(dibujar, 5);
-};
+function draw() {
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  drawStars();
+
+  ctx.fillStyle = "#0000ff";
+  ctx.font = fontSize + "px monospace";
+
+  for (let w of words) {
+    ctx.fillText(w.text, w.x, w.y);
+    w.y += w.speed;
+
+    if (w.y > canvas.height) {
+      w.y = -fontSize * 2;
+    }
+  }
+ 
+  requestAnimationFrame(draw);
+}
+
+draw();
 
